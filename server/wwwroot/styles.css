@@ -1,0 +1,18 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    font-family: 'IBM Plex Mono', monospace;
+    color: yellowgreen;
+}
+header{
+    margin: 2em auto;
+    display: block;
+    text-align: center;
+}
+html{
+    background-color: black;
+}
