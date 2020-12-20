@@ -31,17 +31,17 @@ app.get('/url/:id', (req, res) => {
     });
 });
 app.get('/:id', async (req, res, next) => {
-    const id = req.params.id;
+    const alisa_req = req.params.id;
     try {
+        console.log(alisa_req);
         const url = await pool
-            .query('SELECT url FROM public."URLS" where alias = $1 ;', [id])
+            .query('SELECT url FROM public."URLS" where alias = $1 ;', [
+                alisa_req,
+            ])
             .then((result) => {
                 if (result.rowCount < 1) {
                     res.status(404);
-                    return res.json({
-                        // eslint-disable-next-line quotes
-                        message: "can't find any url with that alias",
-                    });
+                    return res.redirect(`/?error=notFound@${alisa_req}`);
                 }
                 return result.rows[0]?.url;
             })
@@ -58,10 +58,13 @@ app.get('/:id', async (req, res, next) => {
                     ? req.connection.socket.remoteAddress
                     : null);
             const dateNow = new Date();
-            const alias = id;
+
+            const alias = alisa_req;
+            const headers = req.headers;
+            const info = JSON.stringify(headers);
             pool.query(
-                'INSERT INTO public."VISITORS"( ip, date, alias) VALUES ($1, $2, $3);',
-                [ip, dateNow, id]
+                'INSERT INTO public."VISITORS"( ip, date, alias, info) VALUES ($1, $2, $3, $4);',
+                [ip, dateNow, alisa_req, info]
             )
                 .then((result) => {
                     console.log(result);
@@ -156,5 +159,5 @@ app.use((error, req, res, next) => {
 });
 const port = process.env.PORT || 3111;
 app.listen(port, () => {
-    console.log('Hello there');
+    console.log('Url shortener service is running on port:' + port);
 });
