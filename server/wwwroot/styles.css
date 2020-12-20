@@ -16,3 +16,10 @@ header{
 html{
     background-color: black;
 }
+main{
+    margin: 5em auto;
+    display: block;
+    width: 100%;
+    max-width: 800px;
+    
+}
